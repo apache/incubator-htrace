@@ -154,7 +154,7 @@ public class HTraceToZipkinConverter {
     List<BinaryAnnotation> l = new ArrayList<BinaryAnnotation>();
     for (Map.Entry<String, String> e : span.getKVAnnotations().entrySet()) {
       BinaryAnnotation binaryAnn = new BinaryAnnotation();
-      binaryAnn.setAnnotation_type(AnnotationType.BYTES);
+      binaryAnn.setAnnotation_type(AnnotationType.STRING);
       binaryAnn.setKey(e.getKey());
       try {
         binaryAnn.setValue(e.getValue().getBytes("UTF-8"));
