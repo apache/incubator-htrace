@@ -381,7 +381,7 @@ public class Tracer implements Closeable {
     }
     if (!sample()) {
       context.pushScope();
-      return nullScope;
+      return new NullScope(this);
     }
     return newScopeImpl(context, description);
   }
@@ -407,7 +407,7 @@ public class Tracer implements Closeable {
     }
     if (!sample()) {
       context.pushScope();
-      return nullScope;
+      return new NullScope(this);
     }
     return newScopeImpl(context, description);
   }
@@ -418,7 +418,7 @@ public class Tracer implements Closeable {
   public TraceScope newNullScope() {
     ThreadContext context = threadContext.get();
     context.pushScope();
-    return nullScope;
+    return new NullScope(this);
   }
 
   /**
