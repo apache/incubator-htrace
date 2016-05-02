@@ -872,13 +872,22 @@ func (pred *predicateData) spanPtrIsBefore(a *common.Span, b *common.Span) bool 
 		return true
 	}
 	// Compare the spans according to this predicate.
+	// if spans has same relevantSpanData, compare the span Id.
 	aVal := pred.extractRelevantSpanData(a)
 	bVal := pred.extractRelevantSpanData(b)
 	cmp := bytes.Compare(aVal, bVal)
 	if pred.Op.IsDescending() {
-		return cmp > 0
+		if cmp == 0 {
+			return bytes.Compare(a.Id, b.Id) > 0
+		} else {
+			return cmp > 0
+		}
 	} else {
-		return cmp < 0
+		if cmp == 0 {
+			return bytes.Compare(a.Id, b.Id) < 0
+		} else {
+			return cmp < 0
+		}
 	}
 }
 
@@ -1042,7 +1051,20 @@ func (pred *predicateData) createSource(store *dataStore, prev *common.Span) (*s
 		searchKey = append([]byte{src.keyPrefix}, pred.key...)
 	}
 	for i := range src.iters {
+		// Seek moves the iterator the position of the key given or, if the key
+		// doesn't exist, the next key that does exist in the database.
+		// link: https://github.com/jmhodges/levigo/blob/master/iterator.go#L126
 		src.iters[i].Seek(searchKey)
+
+		// When 'pred.op == common.LESS_THAN_OR_EQUALS', and execute 'src.iters[i[.Seek(searchKey)'
+		// the iterator may still leave in the same position with prev.
+		// To avoid this, check the key of iterator.
+		if src.iters[i].Valid() {
+			key := src.iters[i].Key()
+			if src.pred.Op.IsDescending() && bytes.Compare(key, searchKey) > 0 {
+				src.iters[i].Prev()
+			}
+		}
 	}
 	ret = &src
 	return ret, nil
