@@ -69,8 +69,8 @@ public class TestMilliSpan {
   public void testJsonSerialization() throws Exception {
     MilliSpan span = new MilliSpan.Builder().
         description("foospan").
-        begin(123L).
-        end(456L).
+        begin(123L,123L).
+        end(456L,456L).
         parents(new SpanId[] { new SpanId(7L, 7L) }).
         tracerId("b2404.halxg.com:8080").
         spanId(new SpanId(7L, 8L)).
@@ -84,8 +84,8 @@ public class TestMilliSpan {
   public void testJsonSerializationWithNegativeLongValue() throws Exception {
     MilliSpan span = new MilliSpan.Builder().
         description("foospan").
-        begin(-1L).
-        end(-1L).
+        begin(-1L,-1L).
+        end(-1L,-1L).
         parents(new SpanId[] { new SpanId(-1L, -1L) }).
         tracerId("b2404.halxg.com:8080").
         spanId(new SpanId(-1L, -2L)).
@@ -100,8 +100,8 @@ public class TestMilliSpan {
     SpanId parentId = SpanId.fromRandom();
     MilliSpan span = new MilliSpan.Builder().
         description("foospan").
-        begin(ThreadLocalRandom.current().nextLong()).
-        end(ThreadLocalRandom.current().nextLong()).
+        begin(ThreadLocalRandom.current().nextLong(),ThreadLocalRandom.current().nextLong()).
+        end(ThreadLocalRandom.current().nextLong(),ThreadLocalRandom.current().nextLong()).
         parents(new SpanId[] { parentId }).
         tracerId("b2404.halxg.com:8080").
         spanId(parentId.newChildId()).
@@ -115,8 +115,8 @@ public class TestMilliSpan {
   public void testJsonSerializationWithOptionalFields() throws Exception {
     MilliSpan.Builder builder = new MilliSpan.Builder().
         description("foospan").
-        begin(300).
-        end(400).
+        begin(300,300).
+        end(400,400).
         parents(new SpanId[] { }).
         tracerId("b2408.halxg.com:8080").
         spanId(new SpanId(111111111L, 111111111L));
