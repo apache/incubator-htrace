@@ -128,8 +128,8 @@ public class TestUtil {
     MilliSpan.Builder builder = new MilliSpan.Builder();
     builder.spanId(
           new SpanId(nonZeroRandomLong(rand), nonZeroRandomLong(rand)));
-    builder.begin(positiveRandomLong(rand));
-    builder.end(positiveRandomLong(rand));
+    builder.begin(positiveRandomLong(rand),positiveRandomLong(rand));
+    builder.end(positiveRandomLong(rand),positiveRandomLong(rand));
     builder.description(randomString(rand));
     builder.tracerId(randomString(rand));
     int numParents = rand.nextInt(4);
