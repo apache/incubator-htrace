@@ -194,6 +194,18 @@ public class TestHBaseSpanReceiver {
     }
 
     @Override
+    public long getStartTimeNanos() {
+      //TO DO: add nano support
+      return 0;
+    }
+
+    @Override
+    public long getStopTimeNanos() {
+      //TO DO : add nano support
+      return 0;
+    }
+
+    @Override
     public SpanId getSpanId() {
       return new SpanId(span.getTraceId(), span.getSpanId());
     }
