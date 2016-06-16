@@ -46,7 +46,7 @@ public class TestHTraceSpanToZipkinSpan {
             parents(new SpanId[] { } ).
             spanId(new SpanId(100, 100)).
             tracerId("test").
-            begin(System.currentTimeMillis()).
+            begin(System.currentTimeMillis(),System.nanoTime()).
             build();
     Span innerOne = rootSpan.child("Some good work");
     Span innerTwo = innerOne.child("Some more good work");
@@ -72,7 +72,7 @@ public class TestHTraceSpanToZipkinSpan {
         description(tracerId).parents(new SpanId[] { }).
         spanId(new SpanId(2L, 2L)).
         tracerId(tracerId).
-        begin(System.currentTimeMillis()).
+        begin(System.currentTimeMillis(),System.nanoTime()).
         build();
 
     Thread.sleep(500);
@@ -116,7 +116,7 @@ public class TestHTraceSpanToZipkinSpan {
                       parents(new SpanId[] { new SpanId(2L, 2L) }).
                       spanId(new SpanId(2L, 3L)).
                       tracerId("hmaster").
-                      begin(System.currentTimeMillis()).
+                      begin(System.currentTimeMillis(),System.nanoTime()).
                       build();
     com.twitter.zipkin.gen.Span zs = new HTraceToZipkinConverter(12345, (short) -1).convert(ms);
     for (com.twitter.zipkin.gen.Annotation annotation:zs.getAnnotations()) {
@@ -128,7 +128,7 @@ public class TestHTraceSpanToZipkinSpan {
                       parents(new SpanId[] {new SpanId(2, 2)}).
                       spanId(new SpanId(2, 3)).
                       tracerId("HregIonServer").
-                      begin(System.currentTimeMillis()).
+                      begin(System.currentTimeMillis(),System.nanoTime()).
                       build();
     zs = new HTraceToZipkinConverter(12345, (short) -1).convert(ms);
     for (com.twitter.zipkin.gen.Annotation annotation:zs.getAnnotations()) {
