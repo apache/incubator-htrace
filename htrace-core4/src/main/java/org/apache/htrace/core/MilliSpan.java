@@ -91,9 +91,19 @@ public class MilliSpan implements Span {
     public Builder() {
     }
 
+    public Builder begin(long begin){
+      this.begin = begin;
+      return this;
+    }
+
     public Builder begin(long begin, long beginNano) {
       this.begin = begin;
       this.beginNano = beginNano;
+      return this;
+    }
+
+    public Builder end(long end){
+      this.end = end;
       return this;
     }
 

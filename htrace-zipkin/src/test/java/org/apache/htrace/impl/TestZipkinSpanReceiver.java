@@ -64,7 +64,7 @@ public class TestZipkinSpanReceiver {
         description("root").
         spanId(new SpanId(100, 100)).
         tracerId("test").
-        begin(System.currentTimeMillis(),System.nanoTime()).
+        begin(System.currentTimeMillis()).
         build();
     TraceScope rootScope = tracer.newScope("root");
     TraceScope innerOne = tracer.newScope("innerOne");
