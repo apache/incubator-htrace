@@ -53,7 +53,8 @@ public class TestNewScopeWithParentID {
             spanIdHashMap.get(childScope.getSpan().getParents()[1].hashCode()).getHigh());
     Assert.assertEquals(childScope.getSpan().getParents()[1].getLow(),
             spanIdHashMap.get(childScope.getSpan().getParents()[1].hashCode()).getLow());
-
+    childScope.close();
+    activeScope.close();
 
   }
 }
