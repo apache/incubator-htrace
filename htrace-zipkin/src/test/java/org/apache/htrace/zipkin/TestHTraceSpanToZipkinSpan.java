@@ -17,19 +17,19 @@
 
 package org.apache.htrace.zipkin;
 
+import com.twitter.zipkin.gen.AnnotationType;
+import com.twitter.zipkin.gen.BinaryAnnotation;
 import com.twitter.zipkin.gen.zipkinCoreConstants;
-
-import org.apache.htrace.core.HTraceConfiguration;
 import org.apache.htrace.core.MilliSpan;
-import org.apache.htrace.core.POJOSpanReceiver;
 import org.apache.htrace.core.Span;
 import org.apache.htrace.core.SpanId;
+import org.apache.thrift.TException;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.Collection;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -108,6 +108,25 @@ public class TestHTraceSpanToZipkinSpan {
         assertTrue(annotation.getTimestamp() <= endTime);
       }
     }
+  }
+
+  @Test
+  public void testKVSerializesAsUTF8String() throws IOException, TException {
+    Span span = new MilliSpan.Builder().
+            description("root").
+            spanId(new SpanId(100, 100)).
+            tracerId("test").
+            begin(1).
+            build();
+    span.addKVAnnotation("http.path", "/foo/⻩");
+
+    com.twitter.zipkin.gen.Span zs =
+            new HTraceToZipkinConverter(127<<24|1, (short) 80).convert(span);
+
+    Assert.assertEquals(1, zs.getBinary_annotations().size());
+    BinaryAnnotation path = zs.getBinary_annotations().get(0);
+    Assert.assertEquals(AnnotationType.STRING, path.getAnnotation_type());
+    Assert.assertEquals("/foo/⻩", new String(path.getValue(), UTF_8));
   }
 
   @Test
