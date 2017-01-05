@@ -69,7 +69,7 @@ public class ScribeThriftSender {
     }
 
     @Test
-    public void sendsSpans() throws Exception {
+    public void testBinaryAnnotationsEncoding() throws Exception {
         Tracer t = newTracer(sender);
         TraceScope s = t.newScope("root");
         String originalValue = "bar";
