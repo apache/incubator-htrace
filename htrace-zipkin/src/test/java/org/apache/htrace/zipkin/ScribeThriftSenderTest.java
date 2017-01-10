@@ -25,6 +25,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import zipkin.BinaryAnnotation;
 import zipkin.collector.CollectorMetrics;
 import zipkin.collector.scribe.ScribeCollector;
 import zipkin.storage.InMemoryStorage;
@@ -32,7 +33,7 @@ import zipkin.storage.QueryRequest;
 
 import java.util.List;
 
-public class ScribeThriftSender {
+public class ScribeThriftSenderTest {
 
     InMemoryStorage storage = new InMemoryStorage();
     ScribeCollector collector;
@@ -69,14 +70,14 @@ public class ScribeThriftSender {
     }
 
     @Test
-    public void testBinaryAnnotationsEncoding() throws Exception {
+    public void testBinaryAnnotationsType() throws Exception {
         Tracer t = newTracer(sender);
         TraceScope s = t.newScope("root");
         String originalValue = "bar";
         s.addKVAnnotation("foo", originalValue);
         s.close();
-        List<List<zipkin.Span>> spans = storage.spanStore().getTraces(QueryRequest.builder().build());
-        Assert.assertEquals(new String(spans.listIterator().next().get(0).binaryAnnotations.get(0).value), originalValue);
         t.close();
+        List<List<zipkin.Span>> spans = storage.spanStore().getTraces(QueryRequest.builder().build());
+        Assert.assertEquals(spans.listIterator().next().get(0).binaryAnnotations.get(0).type, BinaryAnnotation.Type.STRING);
     }
 }

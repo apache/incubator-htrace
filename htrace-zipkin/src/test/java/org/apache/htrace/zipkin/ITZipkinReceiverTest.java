@@ -52,7 +52,7 @@ import kafka.zk.EmbeddedZookeeper;
 import scala.collection.JavaConversions;
 import scala.collection.mutable.Buffer;
 
-public class ITZipkinReceiver {
+public class ITZipkinReceiverTest {
 
   @Test
   public void testKafkaTransport() throws Exception {
