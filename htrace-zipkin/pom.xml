@@ -149,6 +149,12 @@ language governing permissions and limitations under the License. -->
       <artifactId>commons-logging</artifactId>
     </dependency>
     <dependency>
+      <groupId>io.zipkin.java</groupId>
+      <artifactId>zipkin-collector-scribe</artifactId>
+      <version>1.19.0</version>
+    </dependency>
+
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>
