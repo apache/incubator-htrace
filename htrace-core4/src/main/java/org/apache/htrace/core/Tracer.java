@@ -314,7 +314,7 @@ public class Tracer implements Closeable {
   private TraceScope newScopeImpl(ThreadContext context, String description) {
     Span span = new MilliSpan.Builder().
         tracerId(tracerId).
-        begin(System.currentTimeMillis()).
+        begin(System.currentTimeMillis(),System.nanoTime()).
         description(description).
         parents(EMPTY_PARENT_ARRAY).
         spanId(SpanId.fromRandom()).
@@ -327,7 +327,7 @@ public class Tracer implements Closeable {
     SpanId parentId = parentScope.getSpan().getSpanId();
     Span span = new MilliSpan.Builder().
         tracerId(tracerId).
-        begin(System.currentTimeMillis()).
+        begin(System.currentTimeMillis(),System.nanoTime()).
         description(description).
         parents(new SpanId[] { parentId }).
         spanId(parentId.newChildId()).
@@ -339,7 +339,7 @@ public class Tracer implements Closeable {
         SpanId parentId) {
     Span span = new MilliSpan.Builder().
         tracerId(tracerId).
-        begin(System.currentTimeMillis()).
+        begin(System.currentTimeMillis(),System.nanoTime()).
         description(description).
         parents(new SpanId[] { parentId }).
         spanId(parentId.newChildId()).
@@ -352,7 +352,7 @@ public class Tracer implements Closeable {
     SpanId parentId = parentScope.getSpan().getSpanId();
     Span span = new MilliSpan.Builder().
         tracerId(tracerId).
-        begin(System.currentTimeMillis()).
+        begin(System.currentTimeMillis(),System.nanoTime()).
         description(description).
         parents(new SpanId[] { parentId, secondParentId }).
         spanId(parentId.newChildId()).

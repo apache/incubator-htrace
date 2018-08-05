@@ -49,11 +49,25 @@ public interface Span {
   long getStartTimeMillis();
 
   /**
+   * Get the span start time.
+   *
+   * @return    The start time, in approximate nanoseconds since the epoch.
+   */
+  long getStartTimeNanos();
+
+  /**
    * Get the span stop time.
    *
    * @return    The stop time, in approximate milliseconds since the epoch.
    */
   long getStopTimeMillis();
+
+  /**
+   * Get the span stop time.
+   *
+   * @return    The stop time, in approximate nanoseconds since the epoch.
+   */
+  long getStopTimeNanos();
 
   /**
    * Return the total amount of time elapsed since start was called, if running,
@@ -177,8 +191,14 @@ public interface Span {
       if (span.getStartTimeMillis() != 0) {
         jgen.writeNumberField("b", span.getStartTimeMillis());
       }
+      if(span.getStartTimeNanos() != 0){
+        jgen.writeNumberField("k", span.getStartTimeNanos());
+      }
       if (span.getStopTimeMillis() != 0) {
         jgen.writeNumberField("e", span.getStopTimeMillis());
+      }
+      if(span.getStopTimeNanos() != 0){
+        jgen.writeNumberField("l",span.getStopTimeNanos());
       }
       if (!span.getDescription().isEmpty()) {
         jgen.writeStringField("d", span.getDescription());

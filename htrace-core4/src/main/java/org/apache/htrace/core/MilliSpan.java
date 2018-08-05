@@ -51,7 +51,9 @@ public class MilliSpan implements Span {
   private static final String EMPTY_STRING = "";
 
   private long begin;
+  private long beginNano;
   private long end;
+  private long endNano;
   private final String description;
   private SpanId parents[];
   private final SpanId spanId;
@@ -62,8 +64,8 @@ public class MilliSpan implements Span {
   @Override
   public Span child(String childDescription) {
     return new MilliSpan.Builder().
-      begin(System.currentTimeMillis()).
-      end(0).
+      begin(System.currentTimeMillis(),System.nanoTime()).
+      end(0,0).
       description(childDescription).
       parents(new SpanId[] {spanId}).
       spanId(spanId.newChildId()).
@@ -76,7 +78,9 @@ public class MilliSpan implements Span {
    */
   public static class Builder {
     private long begin;
+    private long beginNano;
     private long end;
+    private long endNano;
     private String description = EMPTY_STRING;
     private SpanId parents[] = EMPTY_PARENT_ARRAY;
     private SpanId spanId = SpanId.INVALID;
@@ -87,13 +91,25 @@ public class MilliSpan implements Span {
     public Builder() {
     }
 
-    public Builder begin(long begin) {
+    public Builder begin(long begin){
       this.begin = begin;
       return this;
     }
 
-    public Builder end(long end) {
+    public Builder begin(long begin, long beginNano) {
+      this.begin = begin;
+      this.beginNano = beginNano;
+      return this;
+    }
+
+    public Builder end(long end){
       this.end = end;
+      return this;
+    }
+
+    public Builder end(long end, long endNano) {
+      this.end = end;
+      this.endNano = endNano;
       return this;
     }
 
@@ -143,7 +159,9 @@ public class MilliSpan implements Span {
 
   public MilliSpan() {
     this.begin = 0;
+    this.beginNano = 0;
     this.end = 0;
+    this.endNano = 0;
     this.description = EMPTY_STRING;
     this.parents = EMPTY_PARENT_ARRAY;
     this.spanId = SpanId.INVALID;
@@ -155,6 +173,8 @@ public class MilliSpan implements Span {
   private MilliSpan(Builder builder) {
     this.begin = builder.begin;
     this.end = builder.end;
+    this.beginNano = builder.beginNano;
+    this.endNano = builder.endNano;
     this.description = builder.description;
     this.parents = builder.parents;
     this.spanId = builder.spanId;
@@ -170,6 +190,7 @@ public class MilliSpan implements Span {
         throw new IllegalStateException("Span for " + description
             + " has not been started");
       end = System.currentTimeMillis();
+      endNano = System.nanoTime();
     }
   }
 
@@ -287,11 +308,11 @@ public class MilliSpan implements Span {
       Builder builder = new Builder();
       JsonNode bNode = root.get("b");
       if (bNode != null) {
-        builder.begin(bNode.asLong());
+        builder.begin(bNode.asLong(),bNode.asLong());
       }
       JsonNode eNode = root.get("e");
       if (eNode != null) {
-        builder.end(eNode.asLong());
+        builder.end(eNode.asLong(),eNode.asLong());
       }
       JsonNode dNode = root.get("d");
       if (dNode != null) {
@@ -343,5 +364,15 @@ public class MilliSpan implements Span {
 
   public static MilliSpan fromJson(String json) throws IOException {
     return JSON_READER.readValue(json);
+  }
+
+  @Override
+  public long getStartTimeNanos() {
+    return beginNano;
+  }
+
+  @Override
+  public long getStopTimeNanos() {
+    return endNano;
   }
 }
